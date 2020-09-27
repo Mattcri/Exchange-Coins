@@ -1,12 +1,21 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <cp-header/>
+    <main>
+      <router-view class="container px-5 sm:px-20 py-20 flex justify-center"/>
+    </main>
   </div>
 </template>
+
+<script>
+import CpHeader from '@/components/CpHeader'
+
+export default {
+  components: {
+    CpHeader
+  }
+}
+</script>
 
 <style>
 #app {
@@ -14,15 +23,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
   color: #2c3e50;
 }
 
