@@ -15,16 +15,23 @@
     </thead>
     <tbody>
       <tr 
-      v-for="coincap in coincaps" :key="coincap.id"
-      class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100">
+      v-for="coin in coins" :key="coin.id"
+      class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100"
+      >
         <td>
-          
+          <img
+          :src="`https://static.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`"
+          :alt="coin.name"
+          class="w-15 h-12"
+          >
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td><b>#{{ coin.rank }}</b></td>
+        <td>{{ coin.name }}</td>
+        <td>{{ coin.priceUsd | dollar }}</td>
+        <td>{{ coin.marketCapUsd | dollar }}</td>
+        <td :class="coin.changePercent24Hr >= parseInt(0) ? 'text-green-600' : 'text-red-600'">
+           <b>{{ coin.changePercent24Hr | percent }}</b>
+        </td>
         <td class="hidden sm:block"></td>
       </tr>
     </tbody>
@@ -37,7 +44,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'CpTable',
   computed: {
-    ...mapState(['coincaps'])
+    ...mapState(['coins'])
   },
   methods: {
     ...mapActions(['getApi'])
@@ -50,6 +57,10 @@ export default {
 </script>
 
 <style scoped>
+
+  /* td > img {
+    height: 67px;
+  } */
 
   .up::before {
     content: "👆";

@@ -1,24 +1,39 @@
-import Axios from 'axios'
+// import Axios from 'axios'
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import Axios from 'axios'
+
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    coincaps: []
+    coins: [],
+    coin: {},
+    // route: 'bitcoin'
   },
   mutations: {
-    GET_COINCAPS (state, coincaps) {
-      state.coincaps = coincaps
-    }
+    GET_COINS (state, coins) {
+      state.coins = coins
+    },
+    GET_COIN (state, coin) {
+      state.coin = coin
+    },
   },
   actions: {
     getApi ({commit}) {
-      Axios.get('https://api.coincap.io/v2/assets?limit=30')
+      return fetch('https://api.coincap.io/v2/assets?limit=30')
+        .then(response => response.json())
         .then(response => {
-          commit('GET_COINCAPS', response.data)
+          commit('GET_COINS', response.data)
+        })
+        .catch(reject => console.error(reject))
+    },
+    getCoin ({commit}, id) {
+      return fetch(`https://api.coincap.io/v2/assets/${id}`)
+        .then(response => response.json())
+        .then(response => {
+          commit('GET_COIN', response.data)
         })
     }
   },

@@ -19,6 +19,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+    path: '/coin/:id',
+    name: 'CoinDetail',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CoinDetail.vue')
+  },
+  {
     path: '*',
     name: 'Error404',
     component: () => import(/* webpackChunkName: "about" */ '../views/NotFound.vue')
