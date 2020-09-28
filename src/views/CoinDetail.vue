@@ -18,27 +18,27 @@
           <ul>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Ranking</b>
-              <span>#{{coin.rank}}</span>
+              <span><b>#{{coin.rank}}</b></span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Precio actual</b>
-              <span>{{ coin.priceUsd | dollar }}</span>
+              <span><b>{{ coin.priceUsd | dollar }}</b></span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Precio más bajo</b>
-              <span></span>
+              <span><b>{{ minPrice | dollar }}</b></span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Precio más alto</b>
-              <span></span>
+              <span><b>{{ maxPrice | dollar }}</b></span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Precio Promedio</b>
-              <span></span>
+              <span><b>{{ promPrice | dollar }}</b></span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Variación 24hs</b>
-              <span>{{ coin.changePercent24Hr | percent }}</span>
+              <span><b>{{ coin.changePercent24Hr | percent }}</b></span>
             </li>
           </ul>
         </div>
@@ -75,13 +75,32 @@ export default {
     this.getCoinId()
   },
   computed: {
-    ...mapState(['coin'])
+    ...mapState(['coin', 'history']),
+    minPrice() {
+      return Math.min(
+        ...this.history.map(obj => parseFloat(obj.priceUsd).toFixed(2))
+      )
+    },
+    maxPrice() {
+      return Math.max(
+        ...this.history.map(obj => parseFloat(obj.priceUsd).toFixed(2))
+      )
+    },
+    promPrice() {
+      return this.history.reduce((a, b) => a + parseFloat(b.priceUsd), 0) / this.history.length
+    }
   },
   methods: {
-    ...mapActions(["getCoin"]),
+    ...mapActions(['getCoin', 'getHistory']),
     getCoinId() {
       const id = this.$route.params.id
-      this.getCoin(id).then(res => this.coin = res)
+      Promise.all([this.getCoin(id), this.getHistory(id)])
+        .then(([resCoin, resHistory]) => {
+          this.coin = resCoin
+          this.history = resHistory
+        })
+
+      // this.getCoin(id).then(res => this.coin = res)
     }
   }
 

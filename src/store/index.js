@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     coins: [],
     coin: {},
+    history: []
     // route: 'bitcoin'
   },
   mutations: {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     GET_COIN (state, coin) {
       state.coin = coin
     },
+    GET_HISTORY (state, history) {
+      state.history = history
+    }
   },
   actions: {
     getApi ({commit}) {
@@ -34,6 +38,18 @@ export default new Vuex.Store({
         .then(response => response.json())
         .then(response => {
           commit('GET_COIN', response.data)
+        })
+    },
+    getHistory ({commit}, coin) {
+      const now = new Date()
+      const end = now.getTime()
+      now.setDate(now.getDate() - 1)
+      const start = now.getTime()
+      
+      return fetch(`https://api.coincap.io/v2/assets/${coin}/history?interval=h1&start=${start}&end=${end}`)
+        .then(response => response.json())
+        .then(response => {
+          commit('GET_HISTORY', response.data)
         })
     }
   },
