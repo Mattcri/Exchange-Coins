@@ -1,6 +1,9 @@
 <template>
   <div class="flex-col">
-    <template v-if="coin.id">
+    <div class="flex justify-center">
+      <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
+    </div>
+    <template v-if="!isLoading">
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img 
@@ -61,6 +64,13 @@
           <span class="text-xl"></span>
         </div>
       </div>
+      <line-chart 
+        class="my-10"
+        :colors="['orange']"
+        :min="minPrice"
+        :max="maxPrice"
+        :data="chartData"
+      />
     </template>
   </div>
 </template>
@@ -71,6 +81,9 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'CoinDetail',
+  data: () => ({
+    isLoading: false
+  }),
   created() {
     this.getCoinId()
   },
@@ -88,17 +101,26 @@ export default {
     },
     promPrice() {
       return this.history.reduce((a, b) => a + parseFloat(b.priceUsd), 0) / this.history.length
+    },
+    chartData() {
+      const data = []
+      this.history.map(res => {
+        data.push([res.date, parseFloat(res.priceUsd).toFixed(2)])
+      })
+      return data
     }
   },
   methods: {
     ...mapActions(['getCoin', 'getHistory']),
     getCoinId() {
       const id = this.$route.params.id
+      this.isLoading = true
       Promise.all([this.getCoin(id), this.getHistory(id)])
         .then(([resCoin, resHistory]) => {
           this.coin = resCoin
           this.history = resHistory
         })
+        .finally(() => this.isLoading = false)
 
       // this.getCoin(id).then(res => this.coin = res)
     }

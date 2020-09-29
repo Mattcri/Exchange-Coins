@@ -11,7 +11,6 @@ export default new Vuex.Store({
     coins: [],
     coin: {},
     history: []
-    // route: 'bitcoin'
   },
   mutations: {
     GET_COINS (state, coins) {
@@ -39,6 +38,7 @@ export default new Vuex.Store({
         .then(response => {
           commit('GET_COIN', response.data)
         })
+        .catch(reject => console.error(reject))
     },
     getHistory ({commit}, coin) {
       const now = new Date()
@@ -51,6 +51,7 @@ export default new Vuex.Store({
         .then(response => {
           commit('GET_HISTORY', response.data)
         })
+        .catch(reject => console.error(reject))
     }
   },
   modules: {

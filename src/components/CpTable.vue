@@ -1,7 +1,7 @@
 <template>
   <table>
     <thead>
-      <tr class="bg-gray-100 border-b-2 border-gray-400">
+      <tr class="bg-gray-200 border-b-2 border-gray-400">
         <th></th>
         <th>
           <span>Ranking</span>
@@ -26,31 +26,52 @@
           >
         </td>
         <td><b>#{{ coin.rank }}</b></td>
-        <td>{{ coin.name }}</td>
+        <td>
+          <router-link class="hover:underline text-green-600" :to="{ name: 'CoinDetail', params: { id: coin.id } }">
+          <b>{{ coin.name }}</b>
+          </router-link>
+          <small class="ml-1 text-gray-700">
+            {{ coin.symbol }}
+          </small>
+        </td>
         <td>{{ coin.priceUsd | dollar }}</td>
         <td>{{ coin.marketCapUsd | dollar }}</td>
         <td :class="coin.changePercent24Hr >= parseInt(0) ? 'text-green-600' : 'text-red-600'">
            <b>{{ coin.changePercent24Hr | percent }}</b>
         </td>
-        <td class="hidden sm:block"></td>
+        <td class="hidden sm:block">
+          <cp-button @button-click="goToCoin(coin.id)">
+            <span>Detalle</span>
+          </cp-button>
+        </td>
       </tr>
     </tbody>
   </table>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+// import { mapState, mapActions } from 'vuex'
+import CpButton from '@/components/CpButton.vue'
 
 export default {
   name: 'CpTable',
+  components: {
+    CpButton
+  },
+  props: {
+    coins: Array
+  },
   computed: {
-    ...mapState(['coins'])
+    // ...mapState(['coins'])
   },
   methods: {
-    ...mapActions(['getApi'])
+    // ...mapActions(['getApi']),
+    goToCoin(id) {
+      this.$router.push({ name: 'CoinDetail', params: {id} })
+    }
   },
   created() {
-    this.getApi()
+    // this.getApi()
   }
 
 }
