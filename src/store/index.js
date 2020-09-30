@@ -10,7 +10,8 @@ export default new Vuex.Store({
   state: {
     coins: [],
     coin: {},
-    history: []
+    history: [],
+    markets: []
   },
   mutations: {
     GET_COINS (state, coins) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     GET_HISTORY (state, history) {
       state.history = history
+    },
+    GET_MARKETS (state, markets) {
+      state.markets = markets
     }
   },
   actions: {
@@ -52,6 +56,24 @@ export default new Vuex.Store({
           commit('GET_HISTORY', response.data)
         })
         .catch(reject => console.error(reject))
+    },
+    async getMarkets ({commit}, coin) {
+      let api = await fetch(`https://api.coincap.io/v2/assets/${coin}/markets?limit=5`)
+      let response = await api.json()
+      response = await commit('GET_MARKETS', response.data)
+      return response
+        // .then(response => {
+        //   commit('GET_MARKETS', response.data)
+        // })
+        // .catch(reject => console.error(reject))
+    },
+    async getExChange(id) {
+      let api = await fetch(`https://api.coincap.io/v2/exchanges/${id}`)
+      let response = await api.json()
+      return response
+        // .then(response => response.json())
+        // .then(response => response.data)
+
     }
   },
   modules: {

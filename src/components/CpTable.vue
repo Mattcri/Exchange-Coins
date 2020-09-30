@@ -61,9 +61,6 @@ export default {
   props: {
     coins: Array
   },
-  computed: {
-    // ...mapState(['coins'])
-  },
   methods: {
     // ...mapActions(['getApi']),
     goToCoin(id) {

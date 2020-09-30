@@ -3,7 +3,7 @@
     <div class="flex justify-center">
       <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
     </div>
-    <template v-if="!isLoading">
+    <template v-if="!isLoading" >
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img 
@@ -71,24 +71,44 @@
         :max="maxPrice"
         :data="chartData"
       />
+      <h3 class="text-xl my-10">Mejores Ofertas de Cambio</h3>
+      <table>
+        <tr v-for="market in markets" :key="`${market.exchangeId}-${market.priceUsd}`" class="border-b">
+          <td>
+            <b>{{ market.exchangeId }}</b>
+          </td>
+          <td>{{ market.priceUsd | dollar}}</td>
+          <td>{{ market.baseSymbol }} / {{ market.quoteSymbol }}</td>
+          
+        </tr>
+      </table>
     </template>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+// import CpButton from '@/components/CpButton.vue'
 // import api from '@/api'
 
 export default {
   name: 'CoinDetail',
   data: () => ({
-    isLoading: false
+    isLoading: false,
   }),
   created() {
     this.getCoinId()
   },
   computed: {
-    ...mapState(['coin', 'history']),
+    ...mapState(['coin', 'history', 'markets']),
+    // markets: {
+    //   get() {
+    //     return this.$store.state.markets
+    //   },
+    //   set() {
+    //     return this.$store.commit('GET_MARKETS', val)
+    //   }
+    // },
     minPrice() {
       return Math.min(
         ...this.history.map(obj => parseFloat(obj.priceUsd).toFixed(2))
@@ -111,14 +131,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getCoin', 'getHistory']),
+    ...mapActions(['getCoin', 'getHistory', 'getMarkets']),
     getCoinId() {
       const id = this.$route.params.id
       this.isLoading = true
-      Promise.all([this.getCoin(id), this.getHistory(id)])
-        .then(([resCoin, resHistory]) => {
+      Promise.all([this.getCoin(id), this.getHistory(id), this.getMarkets(id)])
+        .then(([resCoin, resHistory, resMarkets]) => {
           this.coin = resCoin
           this.history = resHistory
+          this.markets = resMarkets
         })
         .finally(() => this.isLoading = false)
 
