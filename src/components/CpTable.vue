@@ -3,19 +3,27 @@
     <thead>
       <tr class="bg-gray-200 border-b-2 border-gray-400">
         <th></th>
-        <th>
-          <span>Ranking</span>
+        <th :class="{ up: this.sortOrder === 1, down: this.sortOrder === -1 }">
+          <span @click="changeSortOrder" class="underline cursor-pointer">Ranking</span>
         </th>
         <th>Nombre</th>
         <th>Precio</th>
         <th>Cap. de Mercado</th>
         <th>Variación 24hs</th>
-        <td class="hidden sm:block"></td>
+        <td class="hidden sm:block">
+          <input
+            class="bg-gray-100 focus:outline-none border-b border-gray-400 py-2 px-4 block w-full appearance-none leading-normal"
+            id="filter"
+            placeholder="Buscar..."
+            type="text"
+            v-model="filter"
+          />
+        </td>
       </tr>
     </thead>
     <tbody>
       <tr 
-      v-for="coin in coins" :key="coin.id"
+      v-for="coin in filteredCoins" :key="coin.id"
       class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100"
       >
         <td>
@@ -58,13 +66,34 @@ export default {
   components: {
     CpButton
   },
+  data: () => ({
+    filter: '',
+    sortOrder: 1
+  }),
   props: {
     coins: Array
   },
+  computed: {
+    filteredCoins() {
+      
+      return this.coins.filter(coin => //filtra los elem. del array coins
+      coin.symbol.toLowerCase().includes(this.filter.toLowerCase()) ||
+      coin.name.toLowerCase().includes(this.filter.toLowerCase())
+      )
+      .sort((current, compare) => { //cambia el orden del array coins según el rank
+        if (parseInt(current.rank) > parseInt(compare.rank)) {
+          return this.sortOrder
+        }
+        return this.sortOrder * -1
+      })
+    }
+  },
   methods: {
-    // ...mapActions(['getApi']),
-    goToCoin(id) {
+    goToCoin(id) { // trae el id del objeto coin y lo pasa como ruta
       this.$router.push({ name: 'CoinDetail', params: {id} })
+    },
+    changeSortOrder() {
+      this.sortOrder = this.sortOrder === 1 ? -1 : 1
     }
   },
   created() {
