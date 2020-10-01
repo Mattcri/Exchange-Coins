@@ -28,7 +28,7 @@
       >
         <td>
           <img
-          :src="`https://static.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`"
+          v-lazy="`https://static.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`"
           :alt="coin.name"
           class="w-15 h-12"
           >

@@ -76,6 +76,11 @@ export default new Vuex.Store({
 
     }
   },
+  getters: {
+    coin: (state) => {
+      return state.coin
+    }
+  },
   modules: {
   }
 })

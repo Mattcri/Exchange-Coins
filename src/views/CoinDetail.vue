@@ -47,21 +47,23 @@
         </div>
 
         <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
-          <button
+          <button @click="toggleConverter"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >Cambiar</button>
+          >{{ fromUsd ? `USD a ${coin.symbol}` : `${coin.symbol} a USD` }}</button>
 
           <div class="flex flex-row my-5">
             <label class="w-full" for="convertValue">
               <input
+                v-model="convertValue"
                 id="convertValue"
                 type="number"
+                :placeholder="`Valor en ${fromUsd ? 'USD' : coin.symbol}`"
                 class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
               />
             </label>
           </div>
 
-          <span class="text-xl"></span>
+          <span class="text-xl">{{ convertResult }} {{ fromUsd ? `USD a ${coin.symbol}` : `${coin.symbol} a USD` }}</span>
         </div>
       </div>
       <line-chart 
@@ -95,12 +97,28 @@ export default {
   name: 'CoinDetail',
   data: () => ({
     isLoading: false,
+    fromUsd: true,
+    convertValue: null,
+    
   }),
   created() {
     this.getCoinId()
   },
   computed: {
     ...mapState(['coin', 'history', 'markets']),
+    markets() {
+      return this.$store.state.markets
+    },
+    convertResult() {
+      if (!this.convertValue) {
+        return 0
+      }
+      const result = this.fromUsd 
+        ? this.convertValue / this.coin.priceUsd
+        : this.convertValue * this.coin.priceUsd
+      return result.toFixed(4)
+    },
+    
     // markets: {
     //   get() {
     //     return this.$store.state.markets
@@ -144,6 +162,14 @@ export default {
         .finally(() => this.isLoading = false)
 
       // this.getCoin(id).then(res => this.coin = res)
+    },
+    toggleConverter() {
+      this.fromUsd = !this.fromUsd
+    }
+  },
+  watch: {
+    $route() {
+      this.getCoinId()
     }
   }
 
@@ -151,6 +177,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
 
 </style>

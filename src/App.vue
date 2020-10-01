@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <cp-header/>
+    <cp-header :links="links" />
     <main>
       <router-view class="container px-5 sm:px-20 py-20 flex justify-center"/>
     </main>
@@ -13,7 +13,14 @@ import CpHeader from '@/components/CpHeader'
 export default {
   components: {
     CpHeader
-  }
+  },
+  data: () => ({
+    links: [
+      { title: 'BTC', to: { name: 'CoinDetail', params: { id: 'bitcoin' } } },
+      { title: 'ETH', to: { name: 'CoinDetail', params: { id: 'ethereum' } } },
+      { title: 'XRP', to: { name: 'CoinDetail', params: { id: 'xrp' } } }
+    ]
+  })
 }
 </script>
 
