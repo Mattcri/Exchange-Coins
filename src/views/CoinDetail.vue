@@ -1,4 +1,4 @@
-<template>
+<template >
   <div class="flex-col">
     <div class="flex justify-center">
       <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
@@ -90,8 +90,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-// import CpButton from '@/components/CpButton.vue'
-// import api from '@/api'
+
 
 export default {
   name: 'CoinDetail',
@@ -118,15 +117,6 @@ export default {
         : this.convertValue * this.coin.priceUsd
       return result.toFixed(4)
     },
-    
-    // markets: {
-    //   get() {
-    //     return this.$store.state.markets
-    //   },
-    //   set() {
-    //     return this.$store.commit('GET_MARKETS', val)
-    //   }
-    // },
     minPrice() {
       return Math.min(
         ...this.history.map(obj => parseFloat(obj.priceUsd).toFixed(2))
@@ -154,11 +144,11 @@ export default {
       const id = this.$route.params.id
       this.isLoading = true
       Promise.all([this.getCoin(id), this.getHistory(id), this.getMarkets(id)])
-        .then(([resCoin, resHistory, resMarkets]) => {
-          this.coin = resCoin
-          this.history = resHistory
-          this.markets = resMarkets
-        })
+        // .then(([resCoin, resHistory, resMarkets]) => {
+        //   this.coin = resCoin
+        //   this.history = resHistory
+        //   this.markets = resMarkets
+        // })
         .finally(() => this.isLoading = false)
 
       // this.getCoin(id).then(res => this.coin = res)

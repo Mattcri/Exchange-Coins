@@ -30,7 +30,7 @@
           <img
           v-lazy="`https://static.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`"
           :alt="coin.name"
-          class="w-15 h-12"
+          class="w-13 h-10"
           >
         </td>
         <td><b>#{{ coin.rank }}</b></td>

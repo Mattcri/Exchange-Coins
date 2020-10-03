@@ -6,7 +6,6 @@ const dollarFilter = value => {
   } else {
     return numeral(value).format('($ 0.00a)')
   }
-  // !value ? '$ 0' : numeral(value).format('($ 0.00a)')
 }
 
 const percentFilter = value => {
