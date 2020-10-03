@@ -58,7 +58,6 @@
 </template>
 
 <script>
-// import { mapState, mapActions } from 'vuex'
 import CpButton from '@/components/CpButton.vue'
 
 export default {
@@ -96,9 +95,6 @@ export default {
       this.sortOrder = this.sortOrder === 1 ? -1 : 1
     }
   },
-  created() {
-    // this.getApi()
-  }
 
 }
 </script>

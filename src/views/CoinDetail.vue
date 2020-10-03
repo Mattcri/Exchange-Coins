@@ -144,14 +144,7 @@ export default {
       const id = this.$route.params.id
       this.isLoading = true
       Promise.all([this.getCoin(id), this.getHistory(id), this.getMarkets(id)])
-        // .then(([resCoin, resHistory, resMarkets]) => {
-        //   this.coin = resCoin
-        //   this.history = resHistory
-        //   this.markets = resMarkets
-        // })
         .finally(() => this.isLoading = false)
-
-      // this.getCoin(id).then(res => this.coin = res)
     },
     toggleConverter() {
       this.fromUsd = !this.fromUsd
